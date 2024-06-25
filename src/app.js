@@ -20,25 +20,49 @@ app.get('/', (req, res) => {
 })
 
 app.get('/os', (req, res) => {
-  res.status(200).json(osList)
+  res.status(200).json({
+    data: {
+      osList
+    }
+  })
+})
+
+app.get('/os/:id', (req, res) => {
+  const os = osList.find(o => o.id === req.params.id)
+  res.status(200).json({
+    data: {
+      os
+    }
+  })
 })
 
 app.post('/os', (req, res) => {
   osList.push(req.body);
-  res.status(201).json({ message: "success", status: res.statusCode});
+  res.status(201).json({
+    data: { message: "success", status: res.statusCode}
+  });
 })
 
 app.put('/os/:id', (req, res) => {
   const item = osList.findIndex(o => o.id === req.params.id);
-  osList[item] = req.body;
-  res.status(200).json({ message: "success", status: res.statusCode });
+  osList[item] = {
+    id: req.params.id,
+    ...req.body
+  };
+  res.status(200).json({
+    data: { message: "success", status: res.statusCode }
+  });
 })
 
 app.delete('/os/:id', (req, res) => {
   const updatedList = osList.filter(o => o.id !== req.params.id);
   osList = updatedList;
   console.log(updatedList);
-  res.json({ message: "success", status: res.statusCode });
+  res.json({
+    data: {
+      message: "success", status: res.statusCode
+    }
+  });
 })
 
 export default app;
