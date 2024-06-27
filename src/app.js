@@ -1,5 +1,6 @@
 import express from 'express';
 import connectToDatabase from './config/dbConnect.js';
+import order from './models/Order.js';
 
 const connectionDb = await connectToDatabase();
 
@@ -15,25 +16,15 @@ const app = express();
 
 app.use(express.json());
 
-let osList = [
-  {
-    id: 'f76cbb13-8dac-40b4-8954-dbc396a8d0df',
-    title: 'Conserto de máquina LG'
-  },
-  {
-    id: '090ac745-7ea4-4d97-adae-03c0943876c3',
-    title: 'Troca da placa lavadora (Brastemp)'
-  }
-]
-
 app.get('/', (req, res) => {
   res.status(200).send("Curso de node.js Funcionaaa");
 })
 
-app.get('/os', (req, res) => {
+app.get('/os', async (req, res) => {
+  const listOs = await order.find({});
   res.status(200).json({
     data: {
-      osList
+      listOs
     }
   })
 })
