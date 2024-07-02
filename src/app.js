@@ -1,71 +1,58 @@
-import express from 'express';
-import connectToDatabase from './config/dbConnect.js';
-import order from './models/Order.js';
+import express from "express";
+import connectToDatabase from "./config/dbConnect.js";
+import routes from './routes/index.js'
 
 const connectionDb = await connectToDatabase();
 
-connectionDb.on('error', (error) => {
+connectionDb.on("error", (error) => {
   console.error("Connection error => ", error);
 });
 
-connectionDb.once('open', () => {
+connectionDb.once("open", () => {
   console.log("Connection opened!");
-})
+});
 
 const app = express();
 
-app.use(express.json());
+routes(app);
 
-app.get('/', (req, res) => {
-  res.status(200).send("Curso de node.js Funcionaaa");
-})
-
-app.get('/os', async (req, res) => {
-  const listOs = await order.find({});
+app.get("/os/:id", (req, res) => {
+  const os = osList.find((o) => o.id === req.params.id);
   res.status(200).json({
     data: {
-      listOs
-    }
-  })
-})
+      os,
+    },
+  });
+});
 
-app.get('/os/:id', (req, res) => {
-  const os = osList.find(o => o.id === req.params.id)
-  res.status(200).json({
-    data: {
-      os
-    }
-  })
-})
-
-app.post('/os', (req, res) => {
+app.post("/os", (req, res) => {
   osList.push(req.body);
   res.status(201).json({
-    data: { message: "success", status: res.statusCode}
+    data: { message: "success", status: res.statusCode },
   });
-})
+});
 
-app.put('/os/:id', (req, res) => {
-  const item = osList.findIndex(o => o.id === req.params.id);
+app.put("/os/:id", (req, res) => {
+  const item = osList.findIndex((o) => o.id === req.params.id);
   osList[item] = {
     id: req.params.id,
-    ...req.body
+    ...req.body,
   };
   res.status(200).json({
-    data: { message: "success", status: res.statusCode }
+    data: { message: "success", status: res.statusCode },
   });
-})
+});
 
-app.delete('/os/:id', (req, res) => {
-  const updatedList = osList.filter(o => o.id !== req.params.id);
+app.delete("/os/:id", (req, res) => {
+  const updatedList = osList.filter((o) => o.id !== req.params.id);
   osList = updatedList;
   console.log(updatedList);
   res.json({
     data: {
-      message: "success", status: res.statusCode
-    }
+      message: "success",
+      status: res.statusCode,
+    },
   });
-})
+});
 
 export default app;
-
