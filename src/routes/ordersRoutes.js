@@ -12,4 +12,6 @@ routes.get('/os/:id', OrderController.getOrderDetail);
 
 routes.put('/os/:id', OrderController.updateOrder);
 
+routes.delete('/os/:id', OrderController.deleteOrder);
+
 export default routes;

@@ -64,6 +64,22 @@ class OrderController {
       });
     }
   }
+
+  static async deleteOrder(req, res) {
+    try {
+      const orderId = req.params.id;
+      const orderDeleted = await order.deleteOne({ _id: orderId });
+      res.status(200).json({
+        data: { message: "Order DELETED", status: 201, ...orderDeleted }
+      });
+    } catch (error) {
+      res.status(500).json({
+        data: {
+          message: error.message,
+        }
+      });
+    }
+  }
 }
 
 export default OrderController;
