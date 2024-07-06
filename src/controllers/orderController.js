@@ -1,4 +1,5 @@
 import order from "../models/Order.js";
+import { customer } from "../models/Customer.js";
 
 class OrderController {
   static async getOrders(req, res) {
@@ -19,15 +20,23 @@ class OrderController {
   }
 
   static async recordOrder(req, res) {
+    const newOrder = req.body
     try {
-      const newBook = await order.create(req.body);
+      const orderFound = await customer.findById(newOrder.customer)
+      const orderComplete = {
+        ...newOrder,
+        customer: {
+          ...orderFound._doc
+        }
+      }
+      const orderCreated = await order.create(orderComplete)
       res.status(201).json({
-        data: { message: "Order Created", status: res.statusCode, ...newBook },
+        data: { message: "Order Created", status: res.statusCode, ...orderCreated },
       });
     } catch (error) {
       res.status(500).json({
         data: {
-          message: `Error creating order: ${error.message}`, 
+          message: `Error creating order: ${error.message}`,
         }
       })
     }
@@ -68,7 +77,7 @@ class OrderController {
   static async deleteOrder(req, res) {
     try {
       const orderId = req.params.id;
-      const orderDeleted = await order.deleteOne({ _id: orderId });
+      const orderDeleted = await order.findByIdAndDelete(orderId);
       res.status(200).json({
         data: { message: "Order DELETED", status: 201, ...orderDeleted }
       });

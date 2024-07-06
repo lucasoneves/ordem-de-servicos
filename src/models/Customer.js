@@ -4,12 +4,17 @@ const customerSchema = new mongoose.Schema({
   id: {
     type: mongoose.Schema.Types.ObjectId
   },
+  createdAt: {
+    type: Date
+  },
   title: {
     type: String,
     required: true
   }
 }, { versionKey: false})
 
-const customers = mongoose.model('customers', customerSchema)
+const customer = mongoose.model('customers', customerSchema)
 
-export default customers;
+export {
+  customer, customerSchema
+};
