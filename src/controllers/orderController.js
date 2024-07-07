@@ -89,6 +89,20 @@ class OrderController {
       });
     }
   }
+
+  static async searchOrderByTitle(req, res) {
+    const titleOrder = req.query.title;
+    try {
+      const result = await order.find({ title: { $regex: new RegExp(titleOrder, 'i') } });
+      res.status(200).json({
+        data: {
+          ...result
+        }
+      });
+    } catch (error) {
+      res.status(error.statusCode)
+    }
+  }
 }
 
 export default OrderController;
