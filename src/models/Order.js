@@ -13,7 +13,11 @@ const orderSchema = new mongoose.Schema(
     price: {
       type: Number,
     },
-    customer: customerSchema
+    customer: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'customers',
+      required: true
+    }
   },
   {
     versionKey: false,

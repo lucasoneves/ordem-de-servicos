@@ -4,18 +4,20 @@ import { customer } from "../models/Customer.js";
 class OrderController {
   static async getOrders(req, res) {
     try {
-      const listOs = await order.find({});
+      const listOs = await order.find({}).populate('customer').exec();
       res.status(200).json({
         data: {
           listOs,
         },
       });
     } catch (error) {
-      res.status(error.statusCode).json({
-        data: {
-          message: error.message
-        }
-      });
+      // res.status(error.statusCode).json({
+      //   data: {
+      //     message: error.message
+      //   }
+      // });
+      console.error("ERROR", error)
+      res.json({ data: { error: error.message } });
     }
   }
 
