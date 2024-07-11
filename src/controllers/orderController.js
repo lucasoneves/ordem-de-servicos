@@ -47,7 +47,7 @@ class OrderController {
   static async getOrderDetail(req, res) {
     try {
       const id = req.params.id;
-      const orderSelected = await order.findById(id);
+      const orderSelected = await order.findById(id).populate('customer').exec();
       res.status(200).json({
         data: { orderSelected }
       });

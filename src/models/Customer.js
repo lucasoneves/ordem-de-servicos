@@ -10,6 +10,30 @@ const customerSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true
+  },
+  address: {
+    street: {
+      type: String,
+      required: true
+    },
+    addressNumber: {
+      type: String,
+      required: true
+    },
+    addressComplement: {
+      type: String,
+      required: false
+    }
+  },
+  contact: {
+    email: {
+      type: String,
+      required: true
+    },
+    phone: {
+      type: String,
+      required: true
+    }
   }
 }, { versionKey: false})
 
