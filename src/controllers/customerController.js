@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import {customer} from "../models/Customer.js";
 
 class CustomerController {
@@ -37,19 +38,40 @@ class CustomerController {
     try {
       const id = req.params.id;
       const customerSelected = await customer.findById(id);
-      res.status(200).json({
-        data: {
-          customer: {
-            ...customerSelected._doc
+
+      if (customerSelected !== null) {
+        res.status(200).json({
+          data: {
+            customer: {
+              ...customerSelected._doc
+            }
           }
-        }
-      });
+        });
+      }
+
+      else {
+        res.status(404).send({
+          data: {
+            message: "Customer not found",
+            status: res.statusCode
+          }
+        })
+      }
     } catch (error) {
-      res.status(error.statusCode).json({
+      if (error instanceof mongoose.Error.CastError) {
+        res.status(400).send({
+          data: {
+            message: "Invalid data",
+            status: res.statusCode
+          }
+        })
+      }
+      res.status(500).send({
         data: {
-          message: error.message
+          message: "Internal Server Error",
+          statusCode: error.message
         }
-      });
+      })
     }
   }
 
