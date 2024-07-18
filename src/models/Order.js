@@ -1,5 +1,4 @@
 import mongoose, { mongo } from "mongoose";
-import { customerSchema } from "./Customer.js";
 
 const orderSchema = new mongoose.Schema(
   {
