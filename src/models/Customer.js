@@ -9,7 +9,7 @@ const customerSchema = new mongoose.Schema({
   },
   title: {
     type: String,
-    required: true
+    required: [true, "O nome do cliente é obrigatório"]
   },
   address: {
     street: {
@@ -28,11 +28,11 @@ const customerSchema = new mongoose.Schema({
   contact: {
     email: {
       type: String,
-      required: true
+      required: [true, "O email do cliente é obrigatório"]
     },
     phone: {
       type: String,
-      required: true
+      required: [true, "O telefone do cliente é obrigatório"]
     }
   }
 }, { versionKey: false})

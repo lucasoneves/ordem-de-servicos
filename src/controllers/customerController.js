@@ -7,6 +7,7 @@ class CustomerController {
       const customersList = await customer.find({});
       res.status(200).json({
         data: {
+          total: customersList.length,
           customersList,
         },
       });

@@ -7,7 +7,7 @@ const orderSchema = new mongoose.Schema(
     },
     title: {
       type: String,
-      required: true,
+      required: [true, "O título da ordem de serviço é obrigatório"],
     },
     price: {
       type: Number,
