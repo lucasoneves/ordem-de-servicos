@@ -1,2 +1,2 @@
 ## Ordem de serviços
-Sistema para geração de ordem de serviços para empresas ou autônomos.
+API para gerenciamento de ordens de serviços para empresas ou autônomos.
