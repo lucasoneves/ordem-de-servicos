@@ -2,7 +2,7 @@ import order from "../models/Order.js";
 import { customer } from "../models/Customer.js";
 
 class OrderController {
-  static async getOrders(req, res) {
+  static async getOrders(req, res, next) {
     try {
       const listOs = await order.find({}).populate('customer').exec();
       res.status(200).json({
@@ -11,17 +11,11 @@ class OrderController {
         },
       });
     } catch (error) {
-      // res.status(error.statusCode).json({
-      //   data: {
-      //     message: error.message
-      //   }
-      // });
-      console.error("ERROR", error)
-      res.json({ data: { error: error.message } });
+      next(error);
     }
   }
 
-  static async recordOrder(req, res) {
+  static async recordOrder(req, res, next) {
     const newOrder = req.body
     try {
       const orderFound = await customer.findById(newOrder.customer)
@@ -36,15 +30,11 @@ class OrderController {
         data: { message: "Order Created", status: res.statusCode, ...orderCreated },
       });
     } catch (error) {
-      res.status(500).json({
-        data: {
-          message: `Error creating order: ${error.message}`,
-        }
-      })
+      next(error);
     }
   }
 
-  static async getOrderDetail(req, res) {
+  static async getOrderDetail(req, res, next) {
     try {
       const id = req.params.id;
       const orderSelected = await order.findById(id).populate('customer').exec();
@@ -52,15 +42,11 @@ class OrderController {
         data: { orderSelected }
       });
     } catch (error) {
-      res.status(error.statusCode).json({
-        data: {
-          message: error.message
-        }
-      });
+      next(error)
     }
   }
 
-  static async updateOrder(req, res) {
+  static async updateOrder(req, res, next) {
     try {
       const id = req.params.id;
       const orderUpdated = await order.findByIdAndUpdate(id, req.body);
@@ -68,31 +54,32 @@ class OrderController {
         data: { message: "Order updated", status: 201 }
       });
     } catch (error) {
-      res.status(500).json({
-        data: {
-          message: error.message,
-        }
-      });
+      next(error)
     }
   }
 
-  static async deleteOrder(req, res) {
+  static async deleteOrder(req, res, next) {
     try {
       const orderId = req.params.id;
       const orderDeleted = await order.findByIdAndDelete(orderId);
-      res.status(200).json({
-        data: { message: "Order DELETED", status: 201, ...orderDeleted }
+      if (orderDeleted) {
+        res.status(200).json({
+          data: { message: "Order DELETED", status: 201, ...orderDeleted }
+        });
+        return false;
+      }
+
+      res.status(404).json({
+        data: { message: "Order not found", status: 404, ...orderDeleted }
       });
+      
+      
     } catch (error) {
-      res.status(500).json({
-        data: {
-          message: error.message,
-        }
-      });
+      next(error)
     }
   }
 
-  static async searchOrderByTitle(req, res) {
+  static async searchOrderByTitle(req, res, next) {
     const titleOrder = req.query.title;
     try {
       const result = await order.find({ title: { $regex: new RegExp(titleOrder, 'i') } });
@@ -102,7 +89,7 @@ class OrderController {
         }
       });
     } catch (error) {
-      res.status(error.statusCode)
+      next(error)
     }
   }
 }

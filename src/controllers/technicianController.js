@@ -18,7 +18,7 @@ class TechnicianController {
       });
     }
   }
-  static async createTechnician(req, res) {
+  static async createTechnician(req, res, next) {
     try {
       const existTechnician = await technician.findOne({
         title: req.body.title,
@@ -35,16 +35,12 @@ class TechnicianController {
         data: { message: "Technician name is already been used", status: res.statusCode },
       });
     } catch (error) {
-      return res.status(500).json({
-        data: {
-          message: `Error creating technician: ${error.message}`,
-        }
-      });
+      next(error)
     }
   }
   
 
-  static async getTechnicianDetail(req, res) {
+  static async getTechnicianDetail(req, res, next) {
     try {
       const id = req.params.id;
       const techSelected = await technician.findById(id);
@@ -68,24 +64,11 @@ class TechnicianController {
         })
       }
     } catch (error) {
-      if (error instanceof mongoose.Error.CastError) {
-        res.status(400).send({
-          data: {
-            message: "Invalid data",
-            status: res.statusCode
-          }
-        })
-      }
-      res.status(500).send({
-        data: {
-          message: "Internal Server Error",
-          statusCode: error.message
-        }
-      })
+      next(error)
     }
   }
 
-  static async updateTechnician(req, res) {
+  static async updateTechnician(req, res, next) {
     try {
       const id = req.params.id;
       const technicianUpdated = await technician.findByIdAndUpdate(id, req.body);
@@ -93,15 +76,11 @@ class TechnicianController {
         data: { message: "Technician updated", status: 201, technician : {...technicianUpdated._doc} }
       });
     } catch (error) {
-      res.status(500).json({
-        data: {
-          message: error.message,
-        }
-      });
+      next(error)
     }
   }
 
-  static async deleteTechnician(req, res) {
+  static async deleteTechnician(req, res, next) {
     try {
       const technicianId = req.params.id;
       const techcnicianSelected = await technician.findByIdAndDelete(technicianId);
@@ -109,11 +88,7 @@ class TechnicianController {
         data: { message: "Technician DELETED", status: 201, ...techcnicianSelected }
       });
     } catch (error) {
-      res.status(500).json({
-        data: {
-          message: error.message,
-        }
-      });
+      next(error)
     }
   }
 }
