@@ -1,31 +1,18 @@
 import mongoose from "mongoose";
+import BaseError from "../errors/BaseError.js";
+import InvalidRequest from "../errors/InvalidRequest.js";
+import ValidationError from "../errors/ValidationError.js";
+import NotFound from "../errors/NotFound.js";
 
 function errorHandler(error, req, res, next) {
   if (error instanceof mongoose.Error.CastError) {
-    res.status(400).send({
-      data: {
-        message: "Invalid data",
-        status: res.statusCode
-      }
-    })
+    new InvalidRequest().sendResponse(res);
   } else if (error instanceof mongoose.Error.ValidationError) {
-    const errorMessage = Object.values(error.errors).map(error => error.message).join("; ")
-
-    console.log(errorMessage)
-
-    res.status(400).send({
-      data: {
-        message: errorMessage,
-      }
-    })
-  } else {
-
-    res.status(500).send({
-      data: {
-        message: "Internal Server Error",
-        statusCode: error.message
-      }
-    })
+    new ValidationError(error).sendResponse(res);
+  } else if (error instanceof NotFound) {
+    error.sendResponse(res);
+  }else {
+    new BaseError().sendResponse(res)
   }
 }
 

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import {customer} from "../models/Customer.js";
+import NotFound from "../errors/NotFound.js";
 
 class CustomerController {
   static async getCustomerList(req, res, next) {
@@ -43,12 +44,7 @@ class CustomerController {
       }
 
       else {
-        res.status(404).send({
-          data: {
-            message: "Customer not found",
-            status: res.statusCode
-          }
-        })
+        next(new NotFound("Customer not found"))
       }
     } catch (error) {
       next(error);

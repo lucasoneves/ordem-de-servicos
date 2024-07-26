@@ -18,14 +18,7 @@ class OrderController {
   static async recordOrder(req, res, next) {
     const newOrder = req.body
     try {
-      const orderFound = await customer.findById(newOrder.customer)
-      const orderComplete = {
-        ...newOrder,
-        customer: {
-          ...orderFound._doc
-        }
-      }
-      const orderCreated = await order.create(orderComplete)
+      const orderCreated = await order.create(newOrder)
       res.status(201).json({
         data: { message: "Order Created", status: res.statusCode, ...orderCreated },
       });
