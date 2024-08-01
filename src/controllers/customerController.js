@@ -55,9 +55,15 @@ class CustomerController {
     try {
       const id = req.params.id;
       const customerUpdated = await customer.findByIdAndUpdate(id, req.body);
-      res.status(200).json({
-        data: { message: "Customer updated", status: 201, customer : {...customerUpdated._doc} }
-      });
+
+      if (customerUpdated !== null) {
+        res.status(200).json({
+          data: { message: "Customer updated", status: 201, customer : {...customerUpdated._doc} }
+        });
+      } else {
+        next(new NotFound("Customer not found"))
+      }
+
     } catch (error) {
       next(error);
     }
@@ -67,9 +73,15 @@ class CustomerController {
     try {
       const customerId = req.params.id;
       const customerDeleted = await customer.findByIdAndDelete(customerId);
-      res.status(200).json({
-        data: { message: "Customer DELETED", status: 201, ...customerDeleted }
-      });
+      
+      if (customerDeleted !== null) {
+        res.status(200).json({
+          data: { message: "Customer DELETED", status: 201, ...customerDeleted }
+        });
+      } else {
+        next(new NotFound("Customer not found"))
+      }
+
     } catch (error) {
       next(error);
     }

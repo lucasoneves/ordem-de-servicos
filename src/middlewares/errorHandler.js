@@ -6,7 +6,7 @@ import NotFound from "../errors/NotFound.js";
 
 function errorHandler(error, req, res, next) {
   if (error instanceof mongoose.Error.CastError) {
-    new InvalidRequest().sendResponse(res);
+    new InvalidRequest(error).sendResponse(res);
   } else if (error instanceof mongoose.Error.ValidationError) {
     new ValidationError(error).sendResponse(res);
   } else if (error instanceof NotFound) {

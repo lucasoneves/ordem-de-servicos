@@ -4,9 +4,10 @@ import { customer } from "../models/Customer.js";
 class OrderController {
   static async getOrders(req, res, next) {
     try {
-      const listOs = await order.find({}).populate('customer').exec();
+      const listOs = await order.find({}).populate('customer').populate('technician').exec();
       res.status(200).json({
         data: {
+          total: listOs.length,
           listOs,
         },
       });

@@ -7,7 +7,7 @@ class ValidationError extends InvalidRequest {
       .map(error => error.message)
       .join("; ");
 
-    super();
+    super(`Os seguintes erros foram encontrados: ${mensagensErro}`);
   }
 
 }

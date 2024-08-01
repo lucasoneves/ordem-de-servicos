@@ -16,8 +16,8 @@ connectionDb.once("open", () => {
 
 const app = express();
 
-routes(app);
 
+routes(app);
 app.use(notFoundHandler);
 
 app.use(errorHandler);

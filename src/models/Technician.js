@@ -9,14 +9,14 @@ const technicianSchema = new mongoose.Schema({
   },
   title: {
     type: String,
-    required: true,
+    required: [true, "O nome do(a) técnico(a) é obrigatório"],
     unique: true
   },
   contact: {
     email: {
       type: String,
-      required: true,
-      dropDups: true
+      required: [true, "O email do(a) técnico(a) é obrigatório"],
+      unique: true
     },
     phone: {
       type: String,

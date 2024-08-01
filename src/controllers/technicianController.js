@@ -20,19 +20,10 @@ class TechnicianController {
   }
   static async createTechnician(req, res, next) {
     try {
-      const existTechnician = await technician.findOne({
-        title: req.body.title,
-      });
   
-      if (!existTechnician) {
-        const technicianCreated = await technician.create(req.body);
-        return res.status(201).json({
-          data: { message: "Technician Created", status: res.statusCode, ...technicianCreated._doc },
-        });
-      }
-  
-      return res.status(400).json({
-        data: { message: "Technician name is already been used", status: res.statusCode },
+      const technicianCreated = await technician.create(req.body);
+      return res.status(201).json({
+        data: { message: "Technician Created", status: res.statusCode, ...technicianCreated._doc },
       });
     } catch (error) {
       next(error)
