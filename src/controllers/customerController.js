@@ -86,6 +86,26 @@ class CustomerController {
       next(error);
     }
   }
+
+  static async searchCustomer(req, res, next) {
+    const titleCustomer = req.query.title;
+
+    const search = {}
+
+    if (titleCustomer) {
+      search.title = { $regex: new RegExp(titleCustomer, 'i') }
+    }
+    try {
+      const result = await customer.find(search);
+      res.status(200).json({
+        data: {
+          ...result
+        }
+      });
+    } catch (error) {
+      next(error)
+    }
+  }
 }
 
 export default CustomerController;
