@@ -7,6 +7,7 @@ class TechnicianController {
       const technicianList = await technician.find({});
       res.status(200).json({
         data: {
+          total: technicianList.length,
           technicianList,
         },
       });
@@ -77,6 +78,27 @@ class TechnicianController {
       const techcnicianSelected = await technician.findByIdAndDelete(technicianId);
       res.status(200).json({
         data: { message: "Technician DELETED", status: 201, ...techcnicianSelected }
+      });
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async searchTechnician(req, res, next) {
+    
+    try {
+      const search = {}
+      const titleTechnician = req.query.title;
+  
+      if (titleTechnician) {
+        search.title = { $regex: titleTechnician, $options: "i"}
+      }
+      const result = await technician.find(search);
+      res.status(200).json({
+        data: {
+          total: result.length,
+          result
+        }
       });
     } catch (error) {
       next(error)

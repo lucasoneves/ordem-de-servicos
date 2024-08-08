@@ -9,6 +9,7 @@ const routes = express.Router();
 
 // routes.get('/technician/search', OrderController.searchOrderByTitle);
 routes.get("/technician", TechnicianController.getTechnicianList);
+routes.get("/technicians/search", TechnicianController.searchTechnician);
 
 routes.post(
   "/technician",

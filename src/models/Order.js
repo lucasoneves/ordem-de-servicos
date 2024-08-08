@@ -17,6 +17,16 @@ const orderSchema = new mongoose.Schema(
       type: String,
       required: [true, "O título da ordem de serviço é obrigatório"],
     },
+    status: {
+      type: String,
+      enum: ['pendente', 'em andamento', 'concluída', 'cancelada'],
+      default: 'pendente',
+      required: true
+    },
+    description: {
+      type: String,
+      required: false
+    },
     price: {
       type: Number,
       min: [1, "O valor mínimo está incorreto"],
