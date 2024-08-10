@@ -5,14 +5,18 @@ import InvalidRequest from "../errors/InvalidRequest.js";
 class OrderController {
   static async getOrders(req, res, next) {
     try {
-      let { limit = 5, page = 1 } = req.query;
+      let { limit = 5, page = 1, orderBy = "_id: -1" } = req.query;
+
+      const [orderField, _order] = orderBy.split(":");
 
       limit = parseInt(limit);
       page = parseInt(page);
+      orderBy = parseInt(_order);
 
       if (limit > 0 && page > 0) {
         const listOs = await order
-          .find({})
+          .find()
+          .sort({[orderField]: orderBy})
           .skip((page - 1) * limit)
           .limit(limit)
           .populate("customer")
