@@ -1,4 +1,5 @@
 import mongoose, { mongo } from "mongoose";
+import autopopulate from "mongoose-autopopulate";
 
 const orderSchema = new mongoose.Schema(
   {
@@ -35,18 +36,22 @@ const orderSchema = new mongoose.Schema(
     customer: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'customers',
-      required: true
+      required: true,
+      autopopulate: true
     },
     technician: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'technicians',
-      required: true
+      required: true,
+      autopopulate: true
     }
   },
   {
     versionKey: false,
   }
 );
+
+orderSchema.plugin(autopopulate)
 
 const order = mongoose.model("orders", orderSchema);
 
