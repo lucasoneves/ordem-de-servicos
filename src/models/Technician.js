@@ -5,7 +5,12 @@ const technicianSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId
   },
   createdAt: {
-    type: mongoose.Schema.Types.Date
+    type: Date,
+    default: Date.now()
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now()
   },
   title: {
     type: String,
@@ -20,7 +25,7 @@ const technicianSchema = new mongoose.Schema({
     },
     phone: {
       type: String,
-      required: true
+      required: [true, "O telefone do(a) técnico(a) é obrigatório"],
     }
   }
 }, { versionKey: false})

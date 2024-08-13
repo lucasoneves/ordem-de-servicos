@@ -5,8 +5,12 @@ export const handleInputErrors = (req, res, next) => {
 
   if (!errors.isEmpty()) {
     res.status(400);
-    res.json({ errors: errors.array()})
+    res.json({
+      data: {
+        errors: errors.array(),
+      },
+    });
   } else {
     next();
   }
-}
+};

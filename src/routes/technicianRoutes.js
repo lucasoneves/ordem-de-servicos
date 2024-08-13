@@ -13,14 +13,40 @@ routes.get("/technicians/search", TechnicianController.searchTechnician);
 
 routes.post(
   "/technician",
-  body("title").notEmpty().withMessage("must be at least 5 chars long"), handleInputErrors,
+  body("title")
+    .notEmpty()
+    .withMessage("Title precisa ser no mínimo 5 caracteres"),
+  body("contact.email")
+    .isEmail()
+    .withMessage("Email inválido")
+    .notEmpty()
+    .withMessage("O campo email é obrigatório"),
+  body("contact.phone")
+    .notEmpty()
+    .withMessage("O campo telefone é obrigatório"),
+  handleInputErrors,
   check("contact.*.email").isEmail().notEmpty(),
   TechnicianController.createTechnician
 );
 
 routes.get("/technician/:id", TechnicianController.getTechnicianDetail);
 
-routes.put("/technician/:id", TechnicianController.updateTechnician);
+routes.put(
+  "/technician/:id",
+  body("title")
+    .notEmpty()
+    .withMessage("Title precisa ser no mínimo 5 caracteres"),
+  body("contact.email")
+    .isEmail()
+    .withMessage("Email inválido")
+    .notEmpty()
+    .withMessage("O campo email é obrigatório"),
+  body("contact.phone")
+    .notEmpty()
+    .withMessage("O campo telefone é obrigatório"),
+  handleInputErrors,
+  TechnicianController.updateTechnician
+);
 
 routes.delete("/technician/:id", TechnicianController.deleteTechnician);
 

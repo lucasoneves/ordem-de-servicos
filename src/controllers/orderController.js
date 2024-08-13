@@ -1,4 +1,5 @@
 import order from "../models/Order.js";
+import ValidationError from "../errors/ValidationError.js";
 
 class OrderController {
   static async getOrders(req, res, next) {
@@ -49,6 +50,10 @@ class OrderController {
     try {
       const id = req.params.id;
       const orderUpdated = await order.findByIdAndUpdate(id, req.body);
+
+      if (req.body.customer) {
+        next(new ValidationError("CUstomer não pode ser editado"))
+      }
       res.status(200).json({
         data: { message: "Order updated", status: 201 },
       });
