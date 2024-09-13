@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import {customer} from "../models/Customer.js";
+import { customer } from "../models/Customer.js";
 import NotFound from "../errors/NotFound.js";
 
 class CustomerController {
@@ -19,10 +19,22 @@ class CustomerController {
 
   static async createCustomer(req, res, next) {
     try {
-      const customerCreated = await customer.create(req.body);
-      res.status(201).json({
-        data: { message: "Customer Created", status: res.statusCode, ...customerCreated._doc },
-      });
+      const userExists = await customer.findOne( { 'contact.email': req.body.contact.email })
+      
+      if (userExists) {
+        res.status(400).json({
+          data: { errors: [{ msg: "Customer already exists" }] },
+        });
+      } else {
+        const customerCreated = await customer.create(req.body);
+        res.status(201).json({
+          data: {
+            message: "Customer Created",
+            status: res.statusCode,
+            ...customerCreated._doc,
+          },
+        });
+      }
     } catch (error) {
       next(error);
     }
@@ -37,14 +49,12 @@ class CustomerController {
         res.status(200).json({
           data: {
             customer: {
-              ...customerSelected._doc
-            }
-          }
+              ...customerSelected._doc,
+            },
+          },
         });
-      }
-
-      else {
-        next(new NotFound("Customer not found"))
+      } else {
+        next(new NotFound("Customer not found"));
       }
     } catch (error) {
       next(error);
@@ -58,12 +68,15 @@ class CustomerController {
 
       if (customerUpdated !== null) {
         res.status(200).json({
-          data: { message: "Customer updated", status: 201, customer : {...customerUpdated._doc} }
+          data: {
+            message: "Customer updated",
+            status: 201,
+            customer: { ...customerUpdated._doc },
+          },
         });
       } else {
-        next(new NotFound("Customer not found"))
+        next(new NotFound("Customer not found"));
       }
-
     } catch (error) {
       next(error);
     }
@@ -73,15 +86,18 @@ class CustomerController {
     try {
       const customerId = req.params.id;
       const customerDeleted = await customer.findByIdAndDelete(customerId);
-      
+
       if (customerDeleted !== null) {
         res.status(200).json({
-          data: { message: "Customer DELETED", status: 201, ...customerDeleted }
+          data: {
+            message: "Customer DELETED",
+            status: 201,
+            ...customerDeleted,
+          },
         });
       } else {
-        next(new NotFound("Customer not found"))
+        next(new NotFound("Customer not found"));
       }
-
     } catch (error) {
       next(error);
     }
@@ -90,20 +106,20 @@ class CustomerController {
   static async searchCustomer(req, res, next) {
     const titleCustomer = req.query.title;
 
-    const search = {}
+    const search = {};
 
     if (titleCustomer) {
-      search.title = { $regex: new RegExp(titleCustomer, 'i') }
+      search.title = { $regex: new RegExp(titleCustomer, "i") };
     }
     try {
       const result = await customer.find(search);
       res.status(200).json({
         data: {
-          ...result
-        }
+          ...result,
+        },
       });
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 }

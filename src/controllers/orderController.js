@@ -49,14 +49,15 @@ class OrderController {
   static async updateOrder(req, res, next) {
     try {
       const id = req.params.id;
-      const orderUpdated = await order.findByIdAndUpdate(id, req.body);
+      await order.findByIdAndUpdate(id, req.body);
+      const orderUpdated = await order.findById(id);
 
-      if (req.body.customer) {
-        next(new ValidationError("CUstomer não pode ser editado"))
+      if (order) {
+        res.status(200).json({
+          data: { message: "Order updated", status: 201, orderUpdated },
+        });
       }
-      res.status(200).json({
-        data: { message: "Order updated", status: 201 },
-      });
+
     } catch (error) {
       next(error);
     }

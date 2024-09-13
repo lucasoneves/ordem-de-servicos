@@ -5,6 +5,7 @@ import technicians from './technicianRoutes.js';
 
 const routes = (app) => {
   app.route('/').get((req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
     res.status(200).send("Sistema de ordends de serviços")
   })
 
