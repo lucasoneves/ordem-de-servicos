@@ -9,6 +9,7 @@ const rotas = {
   "/customers": "Entrei na rota customers"
 }
 
+
 app.listen(PORT, () => {
   console.log("Server listening on port", PORT)
 })

@@ -3,6 +3,7 @@ import connectToDatabase from "./config/dbConnect.js";
 import routes from './routes/index.js'
 import errorHandler from "./middlewares/errorHandler.js";
 import notFoundHandler from "./middlewares/notFoundHandler.js";
+import cors from 'cors';
 
 const connectionDb = await connectToDatabase();
 
@@ -15,6 +16,7 @@ connectionDb.once("open", () => {
 });
 
 const app = express();
+app.use(cors());
 
 
 routes(app);
