@@ -5,8 +5,11 @@ class OrderController {
   static async getOrders(req, res, next) {
     try {
       const buscaOrdens = order.find();
+      const totalOrders = await order.countDocuments();
 
       req.result = buscaOrdens;
+      req.totalOrders = totalOrders;
+
 
       next();
     } catch (error) {
