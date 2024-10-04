@@ -1,7 +1,7 @@
 import "dotenv/config";
 import app from './src/app.js';
 
-const PORT = 3001;
+const PORT = 8000;
 
 const rotas = {
   "/": "Node.js Curso",

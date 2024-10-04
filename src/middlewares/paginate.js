@@ -22,8 +22,10 @@ async function paginate(req, res, next) {
         .exec();
       res.status(200).json({
         data: {
-          totalOrders,
-          perPage: paginatedResult.length,
+          nextPage: page + 1,
+          hasMoreOrders: paginatedResult.length >= limit,
+          totalOrders: totalOrders,
+          limitPerPage: limit,
           paginatedResult,
         },
       });
